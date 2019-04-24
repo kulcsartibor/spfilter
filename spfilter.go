@@ -32,6 +32,7 @@ func (e SpFilter) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg
 
 	// Debug log that we've have seen the query. This will only be shown when the debug plugin is loaded.
 	clog.Info("Received response")
+	fmt.Println("Received response")
 
 	// Wrap.
 	pw := NewResponsePrinter(w)
