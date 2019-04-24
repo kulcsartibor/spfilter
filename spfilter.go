@@ -35,15 +35,13 @@ func (e SpFilter) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg
 	clog.Info("LocalAddress:" + w.LocalAddr().String() + "   -   RemoteAddress: " + w.RemoteAddr().String())
 
 	// Wrap.
-	//pw := NewResponsePrinter(w)
+	pw := NewResponsePrinter(w)
 
 	// Export metric with the server label set to the current server handling the request.
 	requestCount.WithLabelValues(metrics.WithServer(ctx)).Inc()
 
 	// Call next plugin (if any).
-
-	//return plugin.NextOrFailure(e.Name(), e.Next, ctx, pw, r)
-	return dns.RcodeRefused, nil
+	return plugin.NextOrFailure(e.Name(), e.Next, ctx, pw, r)
 }
 
 // Name implements the Handler interface.
@@ -61,8 +59,10 @@ func NewResponsePrinter(w dns.ResponseWriter) *ResponsePrinter {
 
 // WriteMsg calls the underlying ResponseWriter's WriteMsg method and prints "spfilter" to standard output.
 func (r *ResponsePrinter) WriteMsg(res *dns.Msg) error {
-
 	fmt.Fprintln(out, ex)
+
+	res.Rcode = dns.RcodeRefused
+
 	return r.ResponseWriter.WriteMsg(res)
 }
 
