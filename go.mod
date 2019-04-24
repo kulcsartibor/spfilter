@@ -1,4 +1,4 @@
-module mavoco.com/coredns/filter
+module github.com/kulcsartibor/spfilter
 
 go 1.12
 

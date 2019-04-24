@@ -1,4 +1,4 @@
-package filter
+package spfilter
 
 import (
 	"github.com/coredns/coredns/core/dnsserver"
