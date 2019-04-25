@@ -30,20 +30,22 @@ func (e SpFilter) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg
 	// Here we wrap the dns.ResponseWriter in a new ResponseWriter and call the next plugin, when the
 	// answer comes back, it will print "spfilter".
 
+	fmt.Println("I am serviceg::::")
+
 	// Debug log that we've have seen the query. This will only be shown when the debug plugin is loaded.
 	clog.Info("Received response")
 	clog.Info(w.LocalAddr().String() + " -> " + w.RemoteAddr().String())
-	clog.Info("Question: " + r.Question[1].Name)
-
+	clog.Info("Next name: " + e.Next.Name())
 	// Wrap.
-	//pw := NewResponsePrinter(w)
+	pw := NewResponsePrinter(w)
 
 	// Export metric with the server label set to the current server handling the request.
 	requestCount.WithLabelValues(metrics.WithServer(ctx)).Inc()
 
 	// Call next plugin (if any).
-	return dns.RcodeRefused, nil
-	//return plugin.NextOrFailure(e.Name(), e.Next, ctx, pw, r)
+	//return dns.RcodeSuccess, nil
+
+	return plugin.NextOrFailure(e.Name(), e.Next, ctx, pw, r)
 }
 
 // Name implements the Handler interface.

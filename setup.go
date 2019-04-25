@@ -1,6 +1,7 @@
 package spfilter
 
 import (
+	"fmt"
 	"github.com/coredns/coredns/core/dnsserver"
 	"github.com/coredns/coredns/plugin"
 	"github.com/coredns/coredns/plugin/metrics"
@@ -10,6 +11,7 @@ import (
 // init registers this plugin within the Caddy plugin framework. It uses "spfilter" as the
 // name, and couples it to the Action "setup".
 func init() {
+	fmt.Println("Init call")
 	caddy.RegisterPlugin("spfilter", caddy.Plugin{
 		ServerType: "dns",
 		Action:     setup,
@@ -19,7 +21,8 @@ func init() {
 // setup is the function that gets called when the config parser see the token "example". Setup is responsible
 // for parsing any extra options the example plugin may have. The first token this function sees is "example".
 func setup(c *caddy.Controller) error {
-	//c.Next() // Ignore "example" and give us the next token.
+	fmt.Println("Setup call")
+	c.Next() // Ignore "example" and give us the next token.
 	/*if c.NextArg() {
 		// If there was another token, return an error, because we don't have any configuration.
 		// Any errors returned from this setup function should be wrapped with plugin.Error, so we
